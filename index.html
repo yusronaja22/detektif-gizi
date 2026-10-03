@@ -1038,7 +1038,12 @@
       <audio id="audio-vo-opening" src="./assets/audio/vo_opening.mp3" preload="auto"></audio>
     </div>
 
-    <section id="scene-cover" class="scene active">
+    <section id="scene-intro" class="scene active" style="justify-content: center; align-items: center; gap: 20px;">
+      <h2 style="color: white; font-size: clamp(24px, 4vw, 40px); font-weight: 900; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); text-align: center;">Siap Bermain?</h2>
+      <button id="btn-enter-fullscreen" class="btn-action-lg" style="padding: 15px 40px; font-size: clamp(18px, 2.5vw, 28px); font-weight: bold; background: var(--color-accent-green); color: white; border: 3px solid white; border-radius: 15px; cursor: pointer; box-shadow: 0 6px 0 #2E7D32;">Masuk ke Game</button>
+    </section>
+
+    <section id="scene-cover" class="scene">
       <img class="title-asset" src="./assets/images/judul.svg" alt="Detektif Gizi Logo">
 
       <div class="cover-carousel">
@@ -1586,6 +1591,7 @@
     // === DOM ELEMENTS SELECTION ===
     const elements = {
       // Scenes
+      sceneIntro: document.getElementById('scene-intro'),
       sceneCover: document.getElementById('scene-cover'),
       sceneInstructions: document.getElementById('scene-instructions'),
       sceneMain: document.getElementById('scene-main'),
@@ -1596,6 +1602,7 @@
       bgOutro: document.getElementById('asset-outro-bg'),
 
       // Controls & Display
+      btnEnterFullscreen: document.getElementById('btn-enter-fullscreen'),
       btnStart: document.getElementById('btn-start'),
       btnContinue: document.getElementById('btn-continue-game'),
       btnSubmit: document.getElementById('btn-submit'),
@@ -1634,7 +1641,6 @@
     window.addEventListener('load', () => {
       bindGlobalSFX();
       initEventListeners();
-      playOpeningVO();
     });
 
     // === CAROUSEL LANDING PAGE (Tujuan Pembelajaran & Misi) ===
@@ -1695,13 +1701,6 @@
       vo.play().catch(() => {});
     }
 
-    // Mulai VO opening pada interaksi pertama (kebijakan autoplay browser)
-    document.body.addEventListener('pointerdown', () => {
-      if (audioService.voOpening && audioService.voOpening.paused) {
-        playOpeningVO();
-      }
-    }, { once: true });
-
     function bindGlobalSFX() {
       document.querySelectorAll('button, .btn-img, .btn-option').forEach(btn => {
         btn.addEventListener('mouseenter', () => !btn.disabled && audioService.playSfx('hover'));
@@ -1720,7 +1719,7 @@
     // === SCENE NAVIGATION ===
     function switchScene(activeSceneKey, bgType = 'main') {
       audioService.stopAllVO();
-      const scenes = [elements.sceneCover, elements.sceneInstructions, elements.sceneMain, elements.sceneOutro];
+      const scenes = [elements.sceneIntro, elements.sceneCover, elements.sceneInstructions, elements.sceneMain, elements.sceneOutro];
       scenes.forEach(scene => scene.classList.remove('active'));
 
       activeSceneKey.classList.add('active');
@@ -1899,28 +1898,19 @@
     function initEventListeners() {
       updateStartState();
 
-      const proceedToGame = () => {
-        document.getElementById('fullscreen-modal').classList.remove('active');
-        audioService.stopVO(audioService.voOpening);
-        switchScene(elements.sceneInstructions, 'main');
-        playInstructionsVO();
-      };
-
-      elements.btnStart.addEventListener('click', () => {
-        document.getElementById('fullscreen-modal').classList.add('active');
-      });
-
-      document.getElementById('btn-fs-ya').addEventListener('click', () => {
-        audioService.playSfx('click');
+      elements.btnEnterFullscreen.addEventListener('click', () => {
         if (!document.fullscreenElement) {
           document.documentElement.requestFullscreen().catch(() => {});
         }
-        proceedToGame();
+        audioService.playSfx('click');
+        switchScene(elements.sceneCover, 'main');
+        playOpeningVO();
       });
 
-      document.getElementById('btn-fs-tidak').addEventListener('click', () => {
-        audioService.playSfx('click');
-        proceedToGame();
+      elements.btnStart.addEventListener('click', () => {
+        audioService.stopVO(audioService.voOpening);
+        switchScene(elements.sceneInstructions, 'main');
+        playInstructionsVO();
       });
 
       // Navigasi Carousel di Landing Page
