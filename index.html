@@ -122,9 +122,11 @@
       font-size: clamp(11px, 1.3vw, 17px);
       font-weight: bold;
       text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
-      padding-inline: 6px;
+      padding: 0 4px;
       text-align: center;
-      white-space: nowrap;
+      white-space: normal;
+      line-height: 1.1;
+      word-wrap: break-word;
     }
 
     /* Tombol Cek: redup saat belum ada jawaban dipilih */
@@ -151,16 +153,19 @@
 
     .modal-card {
       position: relative;
-      width: min(62%, 560px);
+      height: 75vh;
+      max-height: 75vh;
+      max-width: min(62%, 560px);
+      aspect-ratio: 1.43;
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 0 auto;
     }
 
     .modal-card .bg-pop {
       width: 100%;
-      height: auto;
-      max-height: 75vh;
+      height: 100%;
       object-fit: contain;
     }
 
@@ -292,7 +297,7 @@
     /* Carousel Tujuan Pembelajaran & Misi di Landing Page */
     .cover-carousel {
       position: relative;
-      width: min(92%, 96vh);
+      width: min(95vw, 750px);
       aspect-ratio: 768 / 277;
       display: flex;
       justify-content: center;
@@ -380,16 +385,19 @@
     }
     .instructions-box {
       position: relative;
-      width: min(94%, 1150px);
+      height: 70vh;
+      max-height: 70vh;
+      max-width: min(94%, 1150px);
+      aspect-ratio: 2.77;
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 0 auto;
     }
 
     .instructions-box img {
       width: 100%;
-      height: auto;
-      max-height: 70vh;
+      height: 100%;
       object-fit: contain;
     }
 
@@ -570,7 +578,10 @@
 
     .question-container {
       position: relative;
-      width: min(95%, 1200px);
+      height: 52vh;
+      max-height: 52vh;
+      max-width: min(95%, 1200px);
+      aspect-ratio: 1.638;
       margin: 0 auto;
       display: flex;
       justify-content: center;
@@ -579,8 +590,7 @@
 
     .question-container img {
       width: 100%;
-      height: auto;
-      max-height: 52vh;
+      height: 100%;
       object-fit: contain;
     }
 
@@ -643,16 +653,19 @@
 
     .outro-box {
       position: relative;
-      width: min(75%, 650px); /*Ukuran popup */
+      height: 40vh;
+      max-height: 40vh;
+      max-width: min(75%, 650px);
+      aspect-ratio: 1.5413;
       display: flex;
       justify-content: center;
       align-items: center;
+      margin: 0 auto;
     }
 
     .outro-box img {
       width: 100%;
-      height: auto;
-      max-height: 40vh; /*Ukuran popup */
+      height: 100%;
       object-fit: contain;
     }
 
@@ -837,21 +850,19 @@
       }
 
       .outro-box {
-        width: min(80%, 520px);
+        height: 38vh;
+        max-height: 38vh;
+        max-width: min(80%, 520px);
       }
 
       .outro-content {
         width: 62%;
         gap: clamp(2px, 1vh, 6px);
       }
-
-      .outro-box img {
-        max-height: 38vh;
-      }
     }
 
-    /* Layar sangat pendek (HP landscape, tinggi < 360px) */
-    @media screen and (orientation: landscape) and (max-height: 360px) {
+    /* Layar pendek (HP landscape, tinggi < 480px) */
+    @media screen and (orientation: landscape) and (max-height: 480px) {
       .title-asset {
         max-height: 16vh;
       }
@@ -884,16 +895,27 @@
         height: clamp(45px, 20vh, 75px);
       }
 
-      .question-container img {
-        max-height: 42vh;
+      .question-container {
+        height: 48vh;
+        max-height: 48vh;
+        max-width: min(95%, 120vh);
+      }
+
+      .session-title {
+        font-size: clamp(10px, 4.5vh, 16px);
+      }
+
+      .question-text {
+        font-size: clamp(9px, 3.5vh, 14px);
       }
 
       .btn-option {
-        height: clamp(24px, 7vh, 34px);
+        height: clamp(28px, 9vh, 42px);
       }
 
       .btn-option .label {
-        font-size: clamp(9px, 1.5vw, 12px);
+        font-size: clamp(9px, 3vh, 13px);
+        padding: 0 2px;
       }
 
       .score-badge img {
@@ -994,14 +1016,72 @@
       .modal-title { font-size: 6vw; }
       .modal-text { font-size: 4.5vw; }
     }
+  /* ==========================================
+     ROTATE OVERLAY (PORTRAIT WARNING)
+     ========================================== */
+  #rotate-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background-color: rgba(42, 42, 42, 0.95);
+    z-index: 9999;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    color: #FACC15;
+    text-align: center;
+    padding: 20px;
+  }
+
+  @media screen and (orientation: portrait) {
+    #rotate-overlay {
+      display: flex;
+    }
+  }
+
+  #rotate-overlay p {
+    font-size: clamp(24px, 6vw, 36px);
+    font-weight: bold;
+    line-height: 1.6;
+    max-width: 90%;
+    margin: 0;
+    font-family: var(--font-family-base);
+  }
+
+  .phone-icon-animated {
+    width: 70px;
+    height: 120px;
+    border: 5px solid white;
+    border-radius: 12px;
+    position: relative;
+    animation: rotatePhone 2.5s ease-in-out infinite;
+  }
+
+  .phone-icon-animated::after {
+    content: '';
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 4px;
+    background: white;
+    border-radius: 2px;
+  }
+
+  @keyframes rotatePhone {
+    0%, 15% { transform: rotate(0deg); }
+    40%, 60% { transform: rotate(-90deg); }
+    85%, 100% { transform: rotate(0deg); }
+  }
   </style>
 </head>
 <body>
 
   <aside id="rotate-overlay" aria-hidden="true">
-    <div class="phone-icon">📱🔄</div>
-    <h2>Putar Layar HP Kamu!</h2>
-    <p>Game ini dirancang untuk mode Landscape. Silakan rotasi perangkatmu!</p>
+    <div class="phone-icon-animated"></div>
+    <p>Silakan putar perangkat Anda<br>ke mode Mendatar<br>(Landscape) untuk bermain.</p>
   </aside>
 
   <div id="bg-wrapper">
@@ -1042,8 +1122,8 @@
       <h2 style="color: #FFF; font-size: clamp(36px, 7vw, 64px); font-weight: 900; text-shadow: 0 6px 0 #1B3B48, 0 10px 20px rgba(0,0,0,0.8); text-align: center; letter-spacing: 3px; font-family: 'Fredoka One', 'Varela Round', sans-serif; margin: 0;">
         SIAP BERMAIN?
       </h2>
-      <button id="btn-enter-fullscreen" class="btn-action-lg" style="padding: 15px 50px; font-size: clamp(20px, 3.5vw, 36px); font-weight: 900; background-color: #4CAF50; color: white; border: 4px solid #FFF; border-radius: 25px; cursor: pointer; box-shadow: 0 8px 0 #2E7D32, 0 15px 30px rgba(0,0,0,0.6); transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px;">
-        Masuk ke Game
+      <button id="btn-enter-fullscreen" style="height: auto; min-height: 60px; display: inline-flex; justify-content: center; align-items: center; padding: 20px 50px; font-size: clamp(20px, 3.5vw, 36px); font-weight: 900; background-color: #4CAF50; color: white; border: 4px solid #FFF; border-radius: 25px; cursor: pointer; box-shadow: 0 8px 0 #2E7D32, 0 15px 30px rgba(0,0,0,0.6); transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; font-family: 'Fredoka One', 'Varela Round', sans-serif;">
+        MASUK KE GAME
       </button>
     </section>
 
@@ -1170,7 +1250,7 @@
 
     <section id="scene-outro" class="scene">
       <div class="outro-box">
-        <img src="./assets/images/pop_berhasil.svg" alt="Popup Berhasil" style="width: 100%; max-height: 600px;">
+        <img src="./assets/images/pop_berhasil.svg" alt="Popup Berhasil">
         <div class="outro-content">
           <h1 class="outro-title">MISI SELESAI! MARI JAGA PENCERNAAN KITA!</h1>
           <p class="outro-desc">
