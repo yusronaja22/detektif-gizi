@@ -1197,6 +1197,20 @@
       </div>
     </div>
 
+    <div id="fullscreen-modal" class="modal-overlay" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <img class="bg-pop" src="./assets/images/pop_judul.svg" alt="Fullscreen Prompt">
+        <div class="modal-content">
+          <h3 style="font-size: clamp(18px, 2.5vw, 28px); color: var(--color-primary-dark); font-weight: 900; margin-bottom: 5px;">Mode Layar Penuh</h3>
+          <p style="font-size: clamp(14px, 1.8vw, 20px); color: var(--color-text-sub); margin-bottom: 15px;">Mainkan game dalam mode layar penuh?</p>
+          <div style="display: flex; gap: 20px; justify-content: center;">
+            <button id="btn-fs-ya" style="padding: 10px 30px; font-size: clamp(14px, 1.8vw, 20px); font-weight: bold; background: var(--color-accent-green); color: white; border: 2px solid white; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 0 #2E7D32;">Ya</button>
+            <button id="btn-fs-tidak" style="padding: 10px 30px; font-size: clamp(14px, 1.8vw, 20px); font-weight: bold; background: var(--color-accent-orange); color: white; border: 2px solid white; border-radius: 12px; cursor: pointer; box-shadow: 0 4px 0 #C62828;">Tidak</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <script>
@@ -1885,10 +1899,28 @@
     function initEventListeners() {
       updateStartState();
 
-      elements.btnStart.addEventListener('click', () => {
+      const proceedToGame = () => {
+        document.getElementById('fullscreen-modal').classList.remove('active');
         audioService.stopVO(audioService.voOpening);
         switchScene(elements.sceneInstructions, 'main');
         playInstructionsVO();
+      };
+
+      elements.btnStart.addEventListener('click', () => {
+        document.getElementById('fullscreen-modal').classList.add('active');
+      });
+
+      document.getElementById('btn-fs-ya').addEventListener('click', () => {
+        audioService.playSfx('click');
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(() => {});
+        }
+        proceedToGame();
+      });
+
+      document.getElementById('btn-fs-tidak').addEventListener('click', () => {
+        audioService.playSfx('click');
+        proceedToGame();
       });
 
       // Navigasi Carousel di Landing Page
